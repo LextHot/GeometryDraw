@@ -302,6 +302,15 @@ MainWindow::MainWindow(QWidget* parent)
         this, &MainWindow::scaleFigure);
     connect(ui->colorButton, &QPushButton::clicked,
         this, &MainWindow::changeColor);
+    connect(ui->figureType, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        this, &MainWindow::onFigureTypeChanged);
+    onFigureTypeChanged(0);
+
+    ui->deleteButton->setEnabled(false);
+    ui->moveButton->setEnabled(false);
+    ui->rotateButton->setEnabled(false);
+    ui->scaleButton->setEnabled(false);
+    ui->colorButton->setEnabled(false);
 }
 
 // Деструктор класса главного окна приложения
@@ -333,8 +342,29 @@ void MainWindow::selectFigure(const QPoint& pos) {
         }
     }
 
+    if (m_selectedFigure) {
+        ui->deleteButton->setEnabled(true);
+        ui->moveButton->setEnabled(true);
+        ui->rotateButton->setEnabled(true);
+        ui->scaleButton->setEnabled(true);
+        ui->colorButton->setEnabled(true);
+    }
+    else {
+        ui->deleteButton->setEnabled(false);
+        ui->moveButton->setEnabled(false);
+        ui->rotateButton->setEnabled(false);
+        ui->scaleButton->setEnabled(false);
+        ui->colorButton->setEnabled(false);
+    }
+
     updateInfo();
     updateScene();
+}
+
+// Сделать неактивными ненужные для выбранной фигуры входные параметры
+void MainWindow::onFigureTypeChanged(int index) {
+    ui->param2->setEnabled(index == 1 || index == 2);
+    ui->sidesSpinBox->setEnabled(index == 3);
 }
 
 // Выбрать создаваемую фигуру
@@ -371,11 +401,13 @@ void MainWindow::deleteFigure() {
         m_figures.removeOne(m_selectedFigure);
         delete m_selectedFigure;
         m_selectedFigure = nullptr;
+        ui->deleteButton->setEnabled(false);
+        ui->moveButton->setEnabled(false);
+        ui->rotateButton->setEnabled(false);
+        ui->scaleButton->setEnabled(false);
+        ui->colorButton->setEnabled(false);
         updateScene();
         updateInfo();
-    }
-    else {
-        QMessageBox::information(this, "Информация", "Сначала выберите фигуру для удаления");
     }
 }
 
@@ -386,9 +418,6 @@ void MainWindow::moveFigure() {
         updateScene();
         updateInfo();
     }
-    else {
-        QMessageBox::information(this, "Информация", "Сначала выберите фигуру для перемещения");
-    }
 }
 
 // Повернуть выбранную фигуру
@@ -398,9 +427,6 @@ void MainWindow::rotateFigure() {
         updateScene();
         updateInfo();
     }
-    else {
-        QMessageBox::information(this, "Информация", "Сначала выберите фигуру для поворота");
-    }
 }
 
 // Масштабировать выбранную фигуру
@@ -409,9 +435,6 @@ void MainWindow::scaleFigure() {
         m_selectedFigure->scale(ui->scaleFactor->value());
         updateScene();
         updateInfo();
-    }
-    else {
-        QMessageBox::information(this, "Информация", "Сначала выберите фигуру для масштабирования");
     }
 }
 
@@ -423,23 +446,6 @@ void MainWindow::changeColor() {
             m_selectedFigure->setColor(color);
             updateScene();
         }
-    }
-    else {
-        QMessageBox::information(this, "Информация", "Сначала выберите фигуру для изменения цвета");
-    }
-}
-
-// Сделать неактивными ненужные для выбранной фигуры входные параметры (ДОРАБОТАТЬ)
-void MainWindow::onFigureTypeChanged(int index) {
-    ui->sidesSpinBox->setEnabled(index == 3);
-
-    if (index == 3) {
-        //ui->param1->setToolTip("Радиус многоугольника");
-        ui->param2->setEnabled(false);
-    }
-    else {
-        //ui->param1->setToolTip("Параметр 1");
-        ui->param2->setEnabled(true);
     }
 }
 
@@ -477,9 +483,6 @@ void MainWindow::updateInfo() {
             .arg(m_selectedFigure->getColor().blue());
 
         ui->infoLabel->setText(info);
-    }
-    else {
-        ui->infoLabel->setText("Фигура не выбрана\n\nНажмите на фигуру для выбора");
     }
 }
 
