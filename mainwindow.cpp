@@ -28,8 +28,7 @@ void Figure::move(int dx, int dy) {
 }
 
 // Методы дочернего класса треугольника
-Triangle::Triangle(const QPoint& center, double size)
-    : m_size(size), m_angle(M_PI / 6) {
+Triangle::Triangle(const QPoint& center, double size): m_size(size), m_angle(M_PI / 6) {
     m_center = center;
 }
 
@@ -81,15 +80,13 @@ bool Triangle::contains(const QPoint& point) const {
 QRect Triangle::getBounds() const {
     QVector<QPoint> vertices = getVertices();
     QRect bounds;
-    for (const auto& v : vertices) {
+    for (const auto& v : vertices)
         bounds = bounds.united(QRect(v, QSize(1, 1)));
-    }
     return bounds;
 }
 
 // Методы дочернего класса прямоугольника
-Rectangle::Rectangle(const QPoint& center, double width, double height)
-    : m_width(width), m_height(height), m_angle(0) {
+Rectangle::Rectangle(const QPoint& center, double width, double height): m_width(width), m_height(height), m_angle(0) {
     m_center = center;
 }
 
@@ -151,15 +148,13 @@ bool Rectangle::contains(const QPoint& point) const {
 QRect Rectangle::getBounds() const {
     QVector<QPoint> vertices = getVertices();
     QRect bounds;
-    for (const auto& v : vertices) {
+    for (const auto& v : vertices)
         bounds = bounds.united(QRect(v, QSize(1, 1)));
-    }
     return bounds;
 }
 
 // Методы дочернего класса ромба
-Rhombus::Rhombus(const QPoint& center, double width, double height)
-    : m_width(width), m_height(height), m_angle(0) {
+Rhombus::Rhombus(const QPoint& center, double width, double height): m_width(width), m_height(height), m_angle(0) {
     m_center = center;
 }
 
@@ -218,15 +213,13 @@ bool Rhombus::contains(const QPoint& point) const {
 QRect Rhombus::getBounds() const {
     QVector<QPoint> vertices = getVertices();
     QRect bounds;
-    for (const auto& v : vertices) {
+    for (const auto& v : vertices)
         bounds = bounds.united(QRect(v, QSize(1, 1)));
-    }
     return bounds;
 }
 
 // Методы дочернего класса многоугольника
-CustomPolygon::CustomPolygon(const QPoint& center, int sides, double radius)
-    : m_sides(sides), m_radius(radius), m_angle(0) {
+CustomPolygon::CustomPolygon(const QPoint& center, int sides, double radius): m_sides(sides), m_radius(radius), m_angle(3 * M_PI / 2) {
     m_center = center;
 }
 
@@ -274,17 +267,18 @@ bool CustomPolygon::contains(const QPoint& point) const {
 QRect CustomPolygon::getBounds() const {
     QVector<QPoint> vertices = getVertices();
     QRect bounds;
-    for (const auto& v : vertices) {
+    for (const auto& v : vertices)
         bounds = bounds.united(QRect(v, QSize(1, 1)));
-    }
     return bounds;
 }
 
 // Методы класса главного окна приложения
 // Конструктор класса главного окна приложения
-MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent), ui(new Ui::GeometrydrawClass) {
+MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::GeometrydrawClass), m_isDragging(false), m_draggedFigure(nullptr) {
     ui->setupUi(this);
+
+    ui->graphicsView->setMouseTracking(true);
+    ui->graphicsView->viewport()->installEventFilter(this);
 
     m_scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(m_scene);
@@ -315,26 +309,133 @@ MainWindow::MainWindow(QWidget* parent)
 
 // Деструктор класса главного окна приложения
 MainWindow::~MainWindow() {
-    for (auto figure : m_figures) {
+    for (auto figure : m_figures)
         delete figure;
+}
+
+// Метод разделения событий выбора фигуры, ее перетаскивания и отпускания
+bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
+    if (obj == ui->graphicsView->viewport()) {
+        // Отловить нажатие по фигуре
+        if (event->type() == QEvent::MouseButtonPress) {
+            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+            if (mouseEvent->button() == Qt::LeftButton) {
+                QPointF scenePos = ui->graphicsView->mapToScene(mouseEvent->pos());
+                // Обработать нажатие на фигуру
+                startDragging(scenePos.toPoint());
+                return true;
+            }
+        }
+        // Отловить перемещение фигуры удержанием ЛКМ
+        else if (event->type() == QEvent::MouseMove) {
+            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+            if (mouseEvent->buttons() & Qt::LeftButton && m_isDragging) {
+                QPointF scenePos = ui->graphicsView->mapToScene(mouseEvent->pos());
+                // Обработать перемещение
+                QPointF delta = scenePos - m_lastDragPos;
+                if (delta.x() != 0 || delta.y() != 0) {
+                    m_draggedFigure->move(delta.x(), delta.y());
+                    m_lastDragPos = scenePos;
+                    updateScene();
+                }
+                return true;
+            }
+        }
+        // Отловить отпускание фигуры
+        else if (event->type() == QEvent::MouseButtonRelease) {
+            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+            if (mouseEvent->button() == Qt::LeftButton) {
+                m_isDragging = false;
+                m_draggedFigure = nullptr;
+                return true;
+            }
+        }
     }
+    return QMainWindow::eventFilter(obj, event);
 }
 
 // Отловить нажатие ЛКМ и получить координату нажатия
 void MainWindow::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
-        QPoint viewPos = ui->graphicsView->mapFrom(this, event->pos());
-        QPointF scenePos = ui->graphicsView->mapToScene(viewPos);
-        selectFigure(scenePos.toPoint());
+        // Проверить, что клик ЛКМ на graphicsView
+        QPoint viewPos = ui->graphicsView->mapFromGlobal(event->globalPos());
+        if (ui->graphicsView->rect().contains(viewPos)) {
+            QPointF scenePos = ui->graphicsView->mapToScene(viewPos);
+            startDragging(scenePos.toPoint());
+
+            // Случай обычного выделения
+            if (!m_isDragging)
+                selectFigure(scenePos.toPoint());
+        }
     }
     QMainWindow::mousePressEvent(event);
 }
 
+// Перетащить фигуру при удержании ЛКМ
+void MainWindow::mouseMoveEvent(QMouseEvent* event) {
+    if (m_isDragging && m_draggedFigure) {
+        QPoint viewPos = ui->graphicsView->mapFromGlobal(event->globalPos());
+        if (ui->graphicsView->rect().contains(viewPos)) {
+            QPointF scenePos = ui->graphicsView->mapToScene(viewPos);
+
+            int dx = scenePos.x() - m_lastDragPos.x();
+            int dy = scenePos.y() - m_lastDragPos.y();
+
+            if (dx != 0 || dy != 0) {
+                m_draggedFigure->move(dx, dy);
+                m_lastDragPos = scenePos.toPoint();
+                updateScene();
+                updateInfo();
+            }
+        }
+    }
+    QMainWindow::mouseMoveEvent(event);
+}
+
+// Отпустить фигуру при отпускании ЛКМ
+void MainWindow::mouseReleaseEvent(QMouseEvent* event) {
+    if (event->button() == Qt::LeftButton)
+        stopDragging();
+    QMainWindow::mouseReleaseEvent(event);
+}
+
+// Начать перемещение фигуры
+void MainWindow::startDragging(const QPoint& pos) {
+    // Найти перемещаемую фигуру
+    for (int i = m_figures.size() - 1; i >= 0; i--) {
+        if (m_figures[i]->contains(pos)) {
+            m_draggedFigure = m_figures[i];
+            m_selectedFigure = m_draggedFigure;
+            m_lastDragPos = pos;
+            m_isDragging = true;
+
+            // Обновить UI для выбранной фигуры
+            ui->deleteButton->setEnabled(true);
+            ui->moveButton->setEnabled(true);
+            ui->rotateButton->setEnabled(true);
+            ui->scaleButton->setEnabled(true);
+            ui->colorButton->setEnabled(true);
+
+            updateInfo();
+            updateScene();
+            break;
+        }
+    }
+}
+
+// Прекратить перемещение фигуры
+void MainWindow::stopDragging() {
+    m_isDragging = false;
+    m_draggedFigure = nullptr;
+}
+
 // Выделить фигуру
 void MainWindow::selectFigure(const QPoint& pos) {
+    // Не переопределяем выбор, если идет перетаскивание
+    if (m_isDragging) return;
+
     m_selectedFigure = nullptr;
 
-    // Поиск фигуры в обратном порядке
     for (int i = m_figures.size() - 1; i >= 0; i--) {
         if (m_figures[i]->contains(pos)) {
             m_selectedFigure = m_figures[i];
@@ -374,21 +475,17 @@ void MainWindow::createFigure() {
 
     QString type = ui->figureType->currentText();
 
-    if (type == "Треугольник") {
+    if (type == "Треугольник")
         figure = new Triangle(pos, ui->param1->value());
-    }
-    else if (type == "Прямоугольник") {
+    else if (type == "Прямоугольник")
         figure = new Rectangle(pos, ui->param1->value(), ui->param2->value());
-    }
-    else if (type == "Ромб") {
+    else if (type == "Ромб")
         figure = new Rhombus(pos, ui->param1->value(), ui->param2->value());
-    }
-    else if (type == "Многоугольник") {
+    else if (type == "Многоугольник")
         figure = new CustomPolygon(pos, ui->sidesSpinBox->value(), ui->param1->value());
-    }
 
     if (figure) {
-        figure->setColor(Qt::green);
+        figure->setColor(Qt::darkMagenta);
         m_figures.append(figure);
         updateScene();
         updateInfo();
@@ -455,17 +552,15 @@ void MainWindow::updateInfo() {
         QString info = "<b>Выбрана фигура</b><br>";
 
         // Определить тип фигуры
-        if (dynamic_cast<Triangle*>(m_selectedFigure)) {
+        if (dynamic_cast<Triangle*>(m_selectedFigure))
             info += "Тип: Треугольник<br>";
-        }
-        else if (dynamic_cast<Rectangle*>(m_selectedFigure)) {
+        else if (dynamic_cast<Rectangle*>(m_selectedFigure))
             info += "Тип: Прямоугольник<br>";
-        }
-        else if (dynamic_cast<Rhombus*>(m_selectedFigure)) {
+        else if (dynamic_cast<Rhombus*>(m_selectedFigure))
             info += "Тип: Ромб<br>";
-        }
         else if (CustomPolygon* poly = dynamic_cast<CustomPolygon*>(m_selectedFigure)) {
-            info += QString("Тип: Многоугольник (%1 сторон)<br>").arg(poly->getSides());
+            info += QString("Тип: Многоугольник<br>");
+            info += QString("Кол-во углов: %1<br>").arg(poly->getSides());
         }
 
         info += QString("Позиция: (%1, %2)<br>")

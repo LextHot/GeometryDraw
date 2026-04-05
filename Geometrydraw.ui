@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>936</width>
+    <width>1177</width>
     <height>801</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Geometrydraw</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(191, 191, 191);</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QGraphicsView" name="graphicsView">
@@ -19,12 +22,15 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>561</width>
+      <width>801</width>
       <height>721</height>
      </rect>
     </property>
     <property name="mouseTracking">
      <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
     </property>
     <property name="renderHints">
      <set>QPainter::Antialiasing|QPainter::TextAntialiasing</set>
@@ -33,15 +39,24 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>580</x>
+      <x>820</x>
       <y>10</y>
       <width>351</width>
-      <height>721</height>
+      <height>551</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
       <widget class="QGroupBox" name="groupBox">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(204, 204, 204);</string>
+       </property>
        <property name="title">
         <string>Создание фигуры</string>
        </property>
@@ -53,6 +68,9 @@
           <width>141</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
         <item>
          <property name="text">
@@ -110,11 +128,14 @@
           <height>25</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
         <property name="maximum">
          <double>1000.000000000000000</double>
         </property>
         <property name="value">
-         <double>150.000000000000000</double>
+         <double>100.000000000000000</double>
         </property>
        </widget>
        <widget class="QDoubleSpinBox" name="param2">
@@ -125,6 +146,9 @@
           <width>151</width>
           <height>25</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
         <property name="maximum">
          <double>1000.000000000000000</double>
@@ -156,7 +180,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>Количество сторон:</string>
+         <string>Количество углов:</string>
         </property>
        </widget>
        <widget class="QSpinBox" name="sidesSpinBox">
@@ -167,6 +191,12 @@
           <width>151</width>
           <height>25</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="minimum">
+         <number>3</number>
         </property>
         <property name="value">
          <number>5</number>
@@ -180,6 +210,9 @@
           <width>121</width>
           <height>25</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
         <property name="minimum">
          <number>-100</number>
@@ -236,6 +269,9 @@
           <height>25</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
         <property name="minimum">
          <number>-100</number>
         </property>
@@ -252,6 +288,15 @@
           <height>25</height>
          </rect>
         </property>
+        <property name="font">
+         <font>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(18, 197, 114);</string>
+        </property>
         <property name="text">
          <string>Создать фигуру</string>
         </property>
@@ -260,6 +305,15 @@
      </item>
      <item>
       <widget class="QGroupBox" name="groupBox_2">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(204, 204, 204);</string>
+       </property>
        <property name="title">
         <string>Управление фигурой</string>
        </property>
@@ -271,6 +325,9 @@
           <width>321</width>
           <height>25</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 233, 151);</string>
         </property>
         <property name="text">
          <string>Удалить выбранную фигуру</string>
@@ -324,6 +381,9 @@
           <height>25</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
         <property name="minimum">
          <number>-100</number>
         </property>
@@ -340,6 +400,9 @@
           <height>25</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(210, 249, 255);</string>
+        </property>
         <property name="text">
          <string>Переместить</string>
         </property>
@@ -352,6 +415,9 @@
           <width>51</width>
           <height>25</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
         <property name="minimum">
          <number>-100</number>
@@ -368,6 +434,9 @@
           <width>111</width>
           <height>25</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
         <property name="minimum">
          <number>-180</number>
@@ -401,6 +470,9 @@
           <height>25</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(210, 249, 255);</string>
+        </property>
         <property name="text">
          <string>Повернуть</string>
         </property>
@@ -413,6 +485,9 @@
           <width>191</width>
           <height>25</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(210, 249, 255);</string>
         </property>
         <property name="text">
          <string>Масштабировать</string>
@@ -440,6 +515,9 @@
           <height>25</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
         <property name="minimum">
          <double>0.100000000000000</double>
         </property>
@@ -450,7 +528,7 @@
          <double>0.100000000000000</double>
         </property>
         <property name="value">
-         <double>2.000000000000000</double>
+         <double>1.500000000000000</double>
         </property>
        </widget>
        <widget class="QPushButton" name="colorButton">
@@ -462,33 +540,54 @@
           <height>25</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(210, 249, 255);</string>
+        </property>
         <property name="text">
          <string>Изменить цвет выбранной фигуры</string>
         </property>
        </widget>
       </widget>
      </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox_3">
-       <property name="title">
-        <string>Информация</string>
-       </property>
-       <widget class="QLabel" name="infoLabel">
-        <property name="geometry">
-         <rect>
-          <x>14</x>
-          <y>35</y>
-          <width>321</width>
-          <height>181</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </widget>
-     </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="infoLabel">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>610</y>
+      <width>141</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(204, 204, 204);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>580</y>
+      <width>151</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Информация:</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -496,8 +595,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>936</width>
-     <height>25</height>
+     <width>1177</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>

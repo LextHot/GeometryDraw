@@ -129,8 +129,11 @@ public:
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
+    bool eventFilter(QObject* obj, QEvent* event) override;
 
-private slots:
+private:
     void createFigure();
     void deleteFigure();
     void moveFigure();
@@ -138,11 +141,15 @@ private slots:
     void scaleFigure();
     void changeColor();
     void onFigureTypeChanged(int index);
-
-private:
     void updateInfo();
     void updateScene();
     void selectFigure(const QPoint& pos);
+    void startDragging(const QPoint& pos);
+    void stopDragging();
+
+    bool m_isDragging;
+    QPointF m_lastDragPos;
+    Figure* m_draggedFigure;
 
     QGraphicsScene* m_scene;
     QGraphicsView* m_view;

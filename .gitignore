@@ -5,3 +5,5 @@
 /.vs
 /Geometry draw/x64
 /x64
+/out/build/debug
+/out/build/release
