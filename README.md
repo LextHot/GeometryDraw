@@ -45,21 +45,27 @@
 
 
 - `GeometryDraw/`
+  - `README.md` - Документация проекта
+  - `.gitignore` - Игнорируемые файлы Git
   - `CMakeLists.txt` - Файл конфигурации CMake
   - `CMakePresets.json` - Пресеты CMake
   - `CMakeUserPresets.json` - Пользовательские пресеты CMake
-  - `Geometrydraw.qrc` - Ресурсы приложения
-  - `Geometrydraw.ui` - Файл интерфейса (Qt Designer)
-  - `README.md` - Документация проекта
-  - `main.cpp` - Точка входа в приложение
-  - `mainwindow.cpp` - Реализация логики приложения
-  - `mainwindow.h` - Заголовочный файл главного окна
-  - `.gitignore` - Игнорируемые файлы Git
 
-  - `Geometry draw.sln` - Файл решения Visual Studio
-  - `Geometry draw.vcxproj` - Проект Visual Studio
-  - `Geometry draw.vcxproj.filters` - Фильтры проекта VS
-  - `Geometry draw.vcxproj.user` - Пользовательские настройки VS
+  - `source/`
+    - `Geometrydraw.qrc` - Ресурсы приложения
+    - `Geometrydraw.ui` - Файл интерфейса (Qt Designer)
+    - `main.cpp` - Точка входа в приложение
+    - `mainwindow.cpp` - Реализация логики приложения
+    - `mainwindow.h` - Заголовочный файл главного окна
+
+  - `VC/`
+    - `Geometry draw.sln` - Файл решения Visual Studio
+    - `Geometry draw.vcxproj` - Проект Visual Studio
+    - `Geometry draw.vcxproj.filters` - Фильтры проекта VS
+    - `Geometry draw.vcxproj.user` - Пользовательские настройки VS
+
+  - `images/`
+    - `geometrydraw_preview` - изображение внешнего вида приложения
 
 **Примечание**: Файлы `*.sln`, `*.vcxproj*` являются файлами Visual Studio и создаются автоматически при использовании данной IDE. Для сборки через CMake они не требуются.
 
@@ -146,7 +152,7 @@ Release/GeometryDraw.exe
 | Информация | Отображение информации о выделенной фигуре |
 
 <p align="center">
-  <img src="geometrydraw_preview.png" alt="Интерфейс приложения" width="600">
+  <img src="images/geometrydraw_preview.png" alt="Интерфейс приложения" width="600">
   <br>
   <em>Внешний вид приложения</em>
 </p>
