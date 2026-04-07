@@ -15,11 +15,11 @@ find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
 # Добавить исполняемый файл
 add_executable(${PROJECT_NAME}
-    main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    Geometrydraw.ui
-    Geometrydraw.qrc
+    source/main.cpp
+    source/mainwindow.cpp
+    source/mainwindow.h
+    source/Geometrydraw.ui
+    source/Geometrydraw.qrc
 )
 
 # Связать с Qt-библиотеками
