@@ -12,6 +12,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QMouseEvent>
+#include <QKeyEvent>
 #include <QGraphicsPolygonItem>
 #include <QtMath>
 #include "ui_Geometrydraw.h"
@@ -19,8 +20,8 @@
 // –одительский класс фигур
 class Figure {
 public:
-    Figure();
-    virtual ~Figure();
+    Figure(); //  онструктор родительского класса фигур
+    ~Figure(); // ƒеструктор родительского класса фигур
 
     void draw(QPainter* painter);
     void move(int dx, int dy);
@@ -128,6 +129,7 @@ public:
     ~MainWindow();
 
 protected:
+    void keyPressEvent(QKeyEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;

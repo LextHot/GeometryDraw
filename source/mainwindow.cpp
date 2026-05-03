@@ -354,6 +354,17 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
     return QMainWindow::eventFilter(obj, event);
 }
 
+// Отловить нажатие клавиши delete для удаления фигуры
+void MainWindow::keyPressEvent(QKeyEvent* event) {
+    if (event->key() == Qt::Key_Delete ||
+        event->key() == Qt::Key_Backspace) {
+        deleteFigure();
+    }
+    else {
+        QMainWindow::keyPressEvent(event);
+    }
+}
+
 // Отловить нажатие ЛКМ и получить координату нажатия
 void MainWindow::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
@@ -548,6 +559,7 @@ void MainWindow::changeColor() {
 
 // Определить и вывести информацию о выбранной фигуре
 void MainWindow::updateInfo() {
+    // Если фигура существует
     if (m_selectedFigure) {
         QString info = "<b>Выбрана фигура</b><br>";
 
@@ -579,6 +591,9 @@ void MainWindow::updateInfo() {
 
         ui->infoLabel->setText(info);
     }
+    // Если фигура была удалена
+    else
+        ui->infoLabel->setText("Нет выбранной фигуры");
 }
 
 // Обновить отрисованный экран

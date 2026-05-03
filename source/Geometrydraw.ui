@@ -131,6 +131,9 @@
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
+        <property name="minimum">
+         <double>10.000000000000000</double>
+        </property>
         <property name="maximum">
          <double>1000.000000000000000</double>
         </property>
@@ -149,6 +152,9 @@
         </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="minimum">
+         <double>10.000000000000000</double>
         </property>
         <property name="maximum">
          <double>1000.000000000000000</double>
@@ -596,7 +602,7 @@
      <x>0</x>
      <y>0</y>
      <width>1177</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
