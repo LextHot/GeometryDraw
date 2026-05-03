@@ -28,6 +28,7 @@ void Figure::move(int dx, int dy) {
 }
 
 // Методы дочернего класса треугольника
+// Конструктор класса треугольник
 Triangle::Triangle(const QPoint& center, double size): m_size(size), m_angle(M_PI / 6) {
     m_center = center;
 }
@@ -86,6 +87,7 @@ QRect Triangle::getBounds() const {
 }
 
 // Методы дочернего класса прямоугольника
+// Конструктор класса прямоугольник
 Rectangle::Rectangle(const QPoint& center, double width, double height): m_width(width), m_height(height), m_angle(0) {
     m_center = center;
 }
@@ -154,6 +156,7 @@ QRect Rectangle::getBounds() const {
 }
 
 // Методы дочернего класса ромба
+// Конструктор класса ромб
 Rhombus::Rhombus(const QPoint& center, double width, double height): m_width(width), m_height(height), m_angle(0) {
     m_center = center;
 }
@@ -219,6 +222,7 @@ QRect Rhombus::getBounds() const {
 }
 
 // Методы дочернего класса многоугольника
+// Конструктор класса многоугольник
 CustomPolygon::CustomPolygon(const QPoint& center, int sides, double radius): m_sides(sides), m_radius(radius), m_angle(3 * M_PI / 2) {
     m_center = center;
 }
@@ -557,7 +561,7 @@ void MainWindow::changeColor() {
     }
 }
 
-// Определить и вывести информацию о выбранной фигуре
+// Обновить и вывести информацию о выбранной фигуре
 void MainWindow::updateInfo() {
     // Если фигура существует
     if (m_selectedFigure) {
