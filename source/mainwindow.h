@@ -166,14 +166,13 @@ private:
     void startDragging(const QPoint& pos); // Начать перемещение фигуры
     void stopDragging(); // Прекратить перемещение фигуры
 
-    bool m_isDragging;
-    QPointF m_lastDragPos;
-    Figure* m_draggedFigure;
+    bool m_isDragging; // Флаг перемещения фигуры
+    QPointF m_lastDragPos; // Предыдущая позиция фигуры
+    Figure* m_draggedFigure; // Перемещаемая фигура
 
-    QGraphicsScene* m_scene;
-    QGraphicsView* m_view;
-    QVector<Figure*> m_figures;
-    Figure* m_selectedFigure;
+    QGraphicsScene* m_scene; // Графическая сцена
+    QVector<Figure*> m_figures; // Перечень фигур на сцене
+    Figure* m_selectedFigure; // Текущая выбранная фигура
 
     // UI элементы
     Ui::GeometrydrawClass* ui;

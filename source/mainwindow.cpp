@@ -14,6 +14,7 @@ Figure::~Figure() {}
 // Отрисовать фигуру
 void Figure::draw(QPainter* painter) {
     QPolygon polygon = getPolygon();
+    // Установить начальные параметры
     painter->save();
     painter->setBrush(QBrush(m_color));
     painter->setPen(QPen(Qt::black, 1));
@@ -66,6 +67,7 @@ void Triangle::rotate(double angle) {
 // Масштабировать фигуру
 void Triangle::scale(double factor) {
     m_size *= factor;
+    // Ограничить размеры
     if (m_size < 10) m_size = 10;
     if (m_size > 200) m_size = 200;
 }
@@ -99,6 +101,7 @@ QVector<QPoint> Rectangle::getVertices() const {
     double halfW = m_width / 2;
     double halfH = m_height / 2;
 
+    // Определить точки вершин
     QVector<QPointF> localPoints;
     localPoints << QPointF(-halfW, -halfH)
         << QPointF(halfW, -halfH)
@@ -108,6 +111,7 @@ QVector<QPoint> Rectangle::getVertices() const {
     double cosA = cos(m_angle);
     double sinA = sin(m_angle);
 
+    // Нормализовать угол
     for (const auto& p : localPoints) {
         int x = m_center.x() + static_cast<int>(p.x() * cosA - p.y() * sinA);
         int y = m_center.y() + static_cast<int>(p.x() * sinA + p.y() * cosA);
@@ -133,6 +137,7 @@ void Rectangle::rotate(double angle) {
 void Rectangle::scale(double factor) {
     m_width *= factor;
     m_height *= factor;
+    // Ограничить размер
     if (m_width < 10) m_width = 10;
     if (m_height < 10) m_height = 10;
     if (m_width > 200) m_width = 200;
@@ -165,6 +170,7 @@ Rhombus::Rhombus(const QPoint& center, double width, double height): m_width(wid
 QVector<QPoint> Rhombus::getVertices() const {
     QVector<QPoint> vertices;
 
+    // Определить точки вершин
     QVector<QPointF> localPoints;
     localPoints << QPointF(0, -m_height / 2)
         << QPointF(m_width / 2, 0)
@@ -174,6 +180,7 @@ QVector<QPoint> Rhombus::getVertices() const {
     double cosA = cos(m_angle);
     double sinA = sin(m_angle);
 
+    // Нормализовать угол
     for (const auto& p : localPoints) {
         int x = m_center.x() + static_cast<int>(p.x() * cosA - p.y() * sinA);
         int y = m_center.y() + static_cast<int>(p.x() * sinA + p.y() * cosA);
@@ -199,6 +206,7 @@ void Rhombus::rotate(double angle) {
 void Rhombus::scale(double factor) {
     m_width *= factor;
     m_height *= factor;
+    // Ограничить размеры
     if (m_width < 10) m_width = 10;
     if (m_height < 10) m_height = 10;
     if (m_width > 200) m_width = 200;
@@ -231,6 +239,7 @@ CustomPolygon::CustomPolygon(const QPoint& center, int sides, double radius): m_
 QVector<QPoint> CustomPolygon::getVertices() const {
     QVector<QPoint> vertices;
 
+    // Нормализовать угол
     for (int i = 0; i < m_sides; i++) {
         double angle = m_angle + i * 2 * M_PI / m_sides;
         int x = m_center.x() + static_cast<int>(m_radius * cos(angle));
@@ -256,6 +265,7 @@ void CustomPolygon::rotate(double angle) {
 // Масштабировать фигуру
 void CustomPolygon::scale(double factor) {
     m_radius *= factor;
+    // Ограничить размеры
     if (m_radius < 10) m_radius = 10;
     if (m_radius > 150) m_radius = 150;
 }
@@ -279,17 +289,19 @@ QRect CustomPolygon::getBounds() const {
 // Методы класса главного окна приложения
 // Конструктор класса главного окна приложения
 MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::GeometrydrawClass), m_isDragging(false), m_draggedFigure(nullptr) {
-    ui->setupUi(this);
+    ui->setupUi(this); // Инициализировать UI
 
+    // Включить отслеживание мыши
     ui->graphicsView->setMouseTracking(true);
     ui->graphicsView->viewport()->installEventFilter(this);
 
+    // Создать сцену
     m_scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(m_scene);
 
+    // Подключить кнопки
     connect(ui->createButton, &QPushButton::clicked,
         this, &MainWindow::createFigure);
-
     connect(ui->deleteButton, &QPushButton::clicked,
         this, &MainWindow::deleteFigure);
     connect(ui->moveButton, &QPushButton::clicked,
@@ -304,6 +316,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::Geometr
         this, &MainWindow::onFigureTypeChanged);
     onFigureTypeChanged(0);
 
+    // Отключить кнопки, пока не выбрана фигура
     ui->deleteButton->setEnabled(false);
     ui->moveButton->setEnabled(false);
     ui->rotateButton->setEnabled(false);
@@ -314,7 +327,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::Geometr
 // Деструктор класса главного окна приложения
 MainWindow::~MainWindow() {
     for (auto figure : m_figures)
-        delete figure;
+        delete figure; // Очистить память
 }
 
 // Метод разделения событий выбора фигуры, ее перетаскивания и отпускания
@@ -360,13 +373,13 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 
 // Отловить нажатие клавиши delete для удаления фигуры
 void MainWindow::keyPressEvent(QKeyEvent* event) {
+    // Отследить нажатие delete и backspace
     if (event->key() == Qt::Key_Delete ||
         event->key() == Qt::Key_Backspace) {
-        deleteFigure();
+        deleteFigure(); // Удалить фигуру со сцены
     }
-    else {
+    else
         QMainWindow::keyPressEvent(event);
-    }
 }
 
 // Отловить нажатие ЛКМ и получить координату нажатия
@@ -388,6 +401,7 @@ void MainWindow::mousePressEvent(QMouseEvent* event) {
 
 // Перетащить фигуру при удержании ЛКМ
 void MainWindow::mouseMoveEvent(QMouseEvent* event) {
+    // Если фигуру перемещают
     if (m_isDragging && m_draggedFigure) {
         QPoint viewPos = ui->graphicsView->mapFromGlobal(event->globalPos());
         if (ui->graphicsView->rect().contains(viewPos)) {
@@ -397,6 +411,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event) {
             int dy = scenePos.y() - m_lastDragPos.y();
 
             if (dx != 0 || dy != 0) {
+                // Переместить фигуру
                 m_draggedFigure->move(dx, dy);
                 m_lastDragPos = scenePos.toPoint();
                 updateScene();
@@ -450,14 +465,14 @@ void MainWindow::selectFigure(const QPoint& pos) {
     if (m_isDragging) return;
 
     m_selectedFigure = nullptr;
-
+    // Найти выделенную фигуру
     for (int i = m_figures.size() - 1; i >= 0; i--) {
         if (m_figures[i]->contains(pos)) {
             m_selectedFigure = m_figures[i];
             break;
         }
     }
-
+    // Сделать кнопки активными при выборе фигуры
     if (m_selectedFigure) {
         ui->deleteButton->setEnabled(true);
         ui->moveButton->setEnabled(true);
@@ -465,6 +480,7 @@ void MainWindow::selectFigure(const QPoint& pos) {
         ui->scaleButton->setEnabled(true);
         ui->colorButton->setEnabled(true);
     }
+    // Сделать кнопки неактивными без выбора фигуры
     else {
         ui->deleteButton->setEnabled(false);
         ui->moveButton->setEnabled(false);
@@ -489,7 +505,7 @@ void MainWindow::createFigure() {
     Figure* figure = nullptr;
 
     QString type = ui->figureType->currentText();
-
+    // Определить тип фигуры
     if (type == "Треугольник")
         figure = new Triangle(pos, ui->param1->value());
     else if (type == "Прямоугольник")
@@ -500,8 +516,8 @@ void MainWindow::createFigure() {
         figure = new CustomPolygon(pos, ui->sidesSpinBox->value(), ui->param1->value());
 
     if (figure) {
-        figure->setColor(Qt::darkMagenta);
-        m_figures.append(figure);
+        figure->setColor(Qt::darkMagenta); // Цвет по умолчанию
+        m_figures.append(figure); // Добавить фигуру
         updateScene();
         updateInfo();
     }
@@ -510,9 +526,11 @@ void MainWindow::createFigure() {
 // Удалить выбранную фигуру
 void MainWindow::deleteFigure() {
     if (m_selectedFigure) {
+        // Очистить список фигур от удаленной
         m_figures.removeOne(m_selectedFigure);
         delete m_selectedFigure;
         m_selectedFigure = nullptr;
+        // Сделать кнопки неактивными
         ui->deleteButton->setEnabled(false);
         ui->moveButton->setEnabled(false);
         ui->rotateButton->setEnabled(false);
@@ -578,7 +596,7 @@ void MainWindow::updateInfo() {
             info += QString("Тип: Многоугольник<br>");
             info += QString("Кол-во углов: %1<br>").arg(poly->getSides());
         }
-
+        // Вставить необходимые параметры текущей фигуры
         info += QString("Позиция: (%1, %2)<br>")
             .arg(m_selectedFigure->getPosition().x())
             .arg(m_selectedFigure->getPosition().y());
