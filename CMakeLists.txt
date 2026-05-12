@@ -20,7 +20,7 @@ add_executable(${PROJECT_NAME}
     source/mainwindow.h
     source/Geometrydraw.ui
     source/Geometrydraw.qrc
-)
+ "source/geometry.h" "source/geometry.cpp")
 
 # Связать с Qt-библиотеками
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -28,3 +28,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt5::Widgets
     Qt5::Gui
 )
+
+if(WIN32) # Отключить запуск консоли
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        WIN32_EXECUTABLE TRUE
+    )
+endif()
