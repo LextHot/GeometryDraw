@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::Geometr
 MainWindow::~MainWindow() {
     for (auto figure : m_figures)
         delete figure; // Очистить память
+    m_draggedFigure = nullptr;
+    m_selectedFigure = nullptr;
 }
 
 // Метод разделения событий выбора фигуры, ее перетаскивания и отпускания
